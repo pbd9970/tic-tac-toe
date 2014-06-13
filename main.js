@@ -9,6 +9,7 @@ var spaces = [
 var player1 = 'veggies';
 var player2 = 'junkfood';
 var currentPlayer = null;
+var winner = null;
 
 var setNextTurn = function () {
   if (currentPlayer === player1) {
@@ -25,20 +26,30 @@ var checkForWinner = function () {
   // that if three spaces in a row are the same, all three spaces are
   // marked by a player, and not all empty.
 
-  if ( spaces[0] === spaces[1] && spaces[1] === spaces[2]
+  if (
+    // Horizontal 
+       spaces[0] === spaces[1] && spaces[1] === spaces[2]
     || spaces[3] === spaces[4] && spaces[4] === spaces[5]
     || spaces[6] === spaces[7] && spaces[7] === spaces[8]
-    // TODO: Check for rest of game winning cases
+    // Vertical
+    || spaces[0] === spaces[3] && spaces[3] === spaces[6]
+    || spaces[1] === spaces[4] && spaces[4] === spaces[7]
+    || spaces[2] === spaces[5] && spaces[5] === spaces[8]
+    // Diagonal
+    || spaces[0] === spaces[4] && spaces[4] === spaces[8]
+    || spaces[2] === spaces[4] && spaces[4] === spaces[6]
   )
   {
     console.log('somebody won');
-    // TODO: Trigger 'game-win' event with the winning player as the event data
+    winner = currentPlayer;
+    $(document).trigger('game-win')
   }
 };
 
 $(document).on('click', '#board .space', function (e) {
   var spaceNum = $(e.currentTarget).index();
   console.log('You clicked on space #' + spaceNum);
+  console.log(this)
 
   // Marks the space with the current player's name
   // TODO: Don't mark it unless the space is blank
@@ -50,8 +61,8 @@ $(document).on('click', '#board .space', function (e) {
   setNextTurn();
 });
 
-$(document).on('game-win', function (e, winner) {
-  // TODO: Alert who won the game
+$(document).on('game-win', function (e) {
+  alert(winner + " won the game!!");
 });
 
 // Start the game
